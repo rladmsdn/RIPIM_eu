@@ -1,9 +1,4 @@
 <!DOCTYPE html>
-<!--
-	Massively by HTML5 UP
-	html5up.net | @ajlkn
-	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
--->
 <html>
   <head>
     <title>RIPIM BY E.U.KIM</title>
@@ -16,6 +11,29 @@
     <noscript
       ><link rel="stylesheet" href="assets/css/noscript.css"
     /></noscript>
+    <style>
+      .array {
+          display: inline-block;
+          margin: 30px;
+      }
+      input {
+          width: 60px;
+      }
+      .label {
+            font-size: 12px;
+            color: gray;
+        }
+        .array-container {
+            display: flex;
+            flex-direction: row;
+        }
+        .selected-array {
+            display: flex;
+            flex-direction: row;
+        }
+  </style>
+   
+
   </head>
   <body class="is-preload">
     <!-- Wrapper -->
@@ -36,40 +54,85 @@
         </ul>
         
       </nav>
+      
 
       <!-- Main -->
       <div id="main">
         <!-- Post -->
         <h2>구현하기</h2>
-            <p>
-              그래프 노드 : 
-            </p>
-         
-		  
-          <p>
-            A : 0| | | | | </br> 
-			B : | 0| | | | </br>  
-			C : | | 0| | | </br>  
-			D : | | | 0| | </br>  
-			E : | | | | 0| </br>  
 
-		
-          </p>
-          <p>
-            루트 : A
-          </p>
-
-		  <p>
-			A</br>
-              ______</br>
-			ㅣ______ㅣ</br>
-			ㅣ______ㅣ</br>
-			ㅣ______ㅣ</br>  
-			ㅣ______ㅣ</br>
-			ㅣ______ㅣ</br>
-			
-          </p>
-
+        <body>
+          <label for="arrayCount">만들고 싶은 배열의 개수를 입력하세요:
+          <input type="number" id="arrayCount" min="1">
+          <button onclick="createArrays()">배열 생성</button></label>
+          
+          <div id="arrayContainer"></div>
+          
+          <label for="selectArray">배열 선택 (A, B, C, ...):
+          <input type="text" id="selectArray">
+          <button onclick="showSelectedArray()">배열 보기</button></label>
+          
+          <div id="selectedArray" class="array-container"></div>
+          
+          <script>
+              const arrays = []; // Store arrays
+              
+              function createArrays() {
+                  const arrayCount = parseInt(document.getElementById("arrayCount").value);
+                  const arrayContainer = document.getElementById("arrayContainer");
+                  arrayContainer.innerHTML = ""; // Clear previous content
+                  
+                  for (let i = 0; i < arrayCount; i++) {
+                      const arrayDiv = document.createElement("div");
+                      arrayDiv.className = "array";
+                      
+                      const arrayLabel = document.createElement("label");
+                      arrayLabel.textContent = `${String.fromCharCode(65 + i)}배열`;
+                      arrayDiv.appendChild(arrayLabel);
+                      
+                      const array = [];
+                      for (let j = 0; j < arrayCount; j++) {
+                          const input = document.createElement("input");
+                          input.type = "number";
+                          if (i === j) {
+                              input.value = `${String.fromCharCode(65 + i)}`;
+                              input.disabled = true;
+                          } else {
+                              input.placeholder = `${String.fromCharCode(65 + j)}`;
+                          }
+                          array.push(input);
+                          arrayDiv.appendChild(input);
+                      }
+                      
+                      arrays.push(array);
+                      arrayContainer.appendChild(arrayDiv);
+                  }
+              }
+              
+              function showSelectedArray() {
+                  const selectArrayInput = document.getElementById("selectArray");
+                  const selectedArrayDiv = document.getElementById("selectedArray");
+                  const selectedArrayName = selectArrayInput.value.toUpperCase();
+                  
+                  selectedArrayDiv.innerHTML = ""; // Clear previous content
+                  
+                  for (let i = 0; i < arrays.length; i++) {
+                      if (String.fromCharCode(65 + i) === selectedArrayName) {
+                          const selectedArray = arrays[i];
+                          for (let j = 0; j < selectedArray.length; j++) {
+                              const input = document.createElement("input");
+                              input.type = "text";
+                              input.value = selectedArray[j].value;
+                              selectedArrayDiv.appendChild(input);
+                          }
+                          break;
+                      }
+                  }
+              }
+          </script>
+      </body>
+           
+          
         </section>
       </div>
 
@@ -79,20 +142,16 @@
           <form method="post" action="#">
             <div class="fields">
               <div class="field">
-                <label for="name">Name</label>
+                <label for="name">Tittle</label>
                 <input type="text" name="name" id="name" />
               </div>
               <div class="field">
-                <label for="email">Email</label>
-                <input type="text" name="email" id="email" />
-              </div>
-              <div class="field">
-                <label for="message">Message</label>
+                <label for="message">text</label>
                 <textarea name="message" id="message" rows="3"></textarea>
               </div>
             </div>
             <ul class="actions">
-              <li><input type="submit" value="Send Message" /></li>
+              <li><input type="submit" value="#" /></li>
             </ul>
           </form>
         </section>
