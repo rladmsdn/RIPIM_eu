@@ -62,17 +62,21 @@
         <h2>구현하기</h2>
 
         <body>
-          <label for="arrayCount">만들고 싶은 노드의 개수 :
+          <label for="arrayCount">만들고 싶은 배열의 개수:
           <input type="number" id="arrayCount" min="1">
-          <button onclick="createArrays()">create</button></label>
+          <button onclick="createArrays()">Go</button></label>
           
           <div id="arrayContainer"></div>
           
           <label for="selectArray">루트 노드 선택 (A, B, C, ...):
           <input type="text" id="selectArray">
-          <button onclick="showSelectedArray()">create</button></label>
+          <button onclick="showSelectedArray()">Go</button></label>
           
           <div id="selectedArray" class="array-container"></div>
+          
+          <div id="routingResult" class="array-container"></div>
+          
+          <div id="resultComment" class="comment"></div>
           
           <script>
               const arrays = []; // Store arrays
@@ -93,12 +97,11 @@
                       const array = [];
                       for (let j = 0; j < arrayCount; j++) {
                           const input = document.createElement("input");
-                          input.type = "number";
+                          input.type = "text"; // Use text type for all inputs
                           if (i === j) {
-                              input.value = `${String.fromCharCode(65 + i)}`;
-                              input.disabled = true;
+                              input.value = "0"; // Set diagonal elements to 0
                           } else {
-                              input.placeholder = `${String.fromCharCode(65 + j)}`;
+                              input.placeholder = "∞"; // Use placeholder for non-diagonal elements
                           }
                           array.push(input);
                           arrayDiv.appendChild(input);
@@ -112,26 +115,83 @@
               function showSelectedArray() {
                   const selectArrayInput = document.getElementById("selectArray");
                   const selectedArrayDiv = document.getElementById("selectedArray");
+                  const routingResultDiv = document.getElementById("routingResult"); // 결과를 표시할 div
+                  const resultCommentDiv = document.getElementById("resultComment"); // 코멘트를 표시할 div
                   const selectedArrayName = selectArrayInput.value.toUpperCase();
                   
                   selectedArrayDiv.innerHTML = ""; // Clear previous content
+                  routingResultDiv.innerHTML = ""; // Clear previous result
+                  resultCommentDiv.innerHTML = ""; // Clear previous comment
                   
                   for (let i = 0; i < arrays.length; i++) {
                       if (String.fromCharCode(65 + i) === selectedArrayName) {
                           const selectedArray = arrays[i];
+                          const resultArray = [];
                           for (let j = 0; j < selectedArray.length; j++) {
                               const input = document.createElement("input");
                               input.type = "text";
                               input.value = selectedArray[j].value;
                               selectedArrayDiv.appendChild(input);
+                              resultArray.push(input);
                           }
+                          applyRipAlgorithm(selectedArrayName, resultArray, routingResultDiv, resultCommentDiv); // 결과와 코멘트를 전달
                           break;
                       }
                   }
               }
+              
+              function applyRipAlgorithm(selectedArrayName, selectedArray, resultDiv, commentDiv) {
+                  // Implement the RIP algorithm here and update the selectedArray
+                  // Calculate shortest distances and update the selectedArray
+                  const N = selectedArray.length;
+                  const distances = new Array(N).fill(null).map(() => new Array(N).fill(Infinity));
+      
+                  for (let i = 0; i < N; i++) {
+                      for (let j = 0; j < N; j++) {
+                          if (i === j) {
+                              distances[i][j] = 0;
+                          } else {
+                              distances[i][j] = parseInt(selectedArray[j].value) || Infinity;
+                          }
+                      }
+                  }
+      
+                  for (let k = 0; k < N; k++) {
+                      for (let i = 0; i < N; i++) {
+                          for (let j = 0; j < N; j++) {
+                              if (distances[i][k] + distances[k][j] < distances[i][j]) {
+                                  distances[i][j] = distances[i][k] + distances[k][j];
+                              }
+                          }
+                      }
+                  }
+      
+                  // Update the selectedArray with the calculated values
+                  for (let i = 0; i < N; i++) {
+                      selectedArray[i].value = distances[0][i] === Infinity ? "∞" : distances[0][i].toString();
+                  }
+      
+                  // 결과를 resultDiv에 표시
+                  for (let i = 0; i < N; i++) {
+                      const rowDiv = document.createElement("div");
+                      rowDiv.className = "array";
+                      for (let j = 0; j < N; j++) {
+                          const input = document.createElement("input");
+                          input.type = "text";
+                          input.value = distances[i][j] === Infinity ? "∞" : distances[i][j].toString();
+                          rowDiv.appendChild(input);
+                      }
+                      resultDiv.appendChild(rowDiv);
+                  }
+      
+                  // 코멘트 표시
+                  const comment = document.createElement("div");
+                  comment.className = "comment";
+                  comment.textContent = `${selectedArrayName}배열의 열의 최단 거리 결과는 다음과 같습니다: ${distances[0].join(', ')}`;
+                  commentDiv.appendChild(comment);
+              }
           </script>
       </body>
-          
         </section>
       </div>
 
