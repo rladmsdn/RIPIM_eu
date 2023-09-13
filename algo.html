@@ -58,7 +58,7 @@
 </code></pre>
 <h1></h1>
 <h4>코드 분석</h4>
-<p>
+<h5>
   (1) Distance_Vector_Routing(): <br>이 코드는 Distance Vector Routing 알고리즘을 구현하는 함수를 시작합니다.
   <br><br>(2) D[myself] = 0 <br>변수 D는 각 노드까지의 거리를 나타내는 벡터입니다. 이 라인은 자기 자신까지의 거리를 0으로 초기화합니다.
   <br><br>(3) for (y = 1 to N) <br>1부터 N까지의 노드를 순회합니다. y는 현재 순회 중인 노드를 나타냅니다.
@@ -70,7 +70,7 @@
   <br><br>(9) for (y = 1 to N)<br> D[y] = min [D[y], (c[myself][w] + D[y])]<br>모든 노드에 대해서, 현재 계산된 거리 벡터 D[y]를 노드 w를 통해 가는 비용 c[myself][w]를 추가한 값과 기존 D[y] 값 중 작은 값을 선택하여 갱신합니다. 이것은 Bellman-Ford 방정식입니다.
   <br><br>(10) if (any change in the vector): send vector {D[1], D[2], ..., D[N]} to all neighbors<br>만약 벡터에 변경이 있었다면, 갱신된 거리 벡터 {D[1], D[2], ..., D[N]}를 모든 이웃 노드에게 전송합니다.
 
-</p>
+</h5>
           </p>
           
         </section>
